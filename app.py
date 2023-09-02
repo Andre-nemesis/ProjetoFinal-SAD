@@ -230,18 +230,33 @@ with abas[1]:
         st.subheader('Selecione a classificação')
         mask_class = dataset["rating"][dataset['type']=='Movie'].value_counts().sort_index()
         select_class = st.selectbox('Classificações',options=mask_class.index)
+        show_movie_rating = st.checkbox('Mostrar dados da classificação')
+        show_movie_rating_date = st.checkbox('Mostrar quantidade de filmes por cada categoria')
+        #tipo de plotagem
         st.subheader('Selecione o tipo de gráfico')
         graph_bar_movie_5 = st.checkbox('Gráfico de Barras')
         graph_line_movie_5 = st.checkbox('Gráfico de Linhas')
         mask_select_class = dataset[dataset['rating']==select_class][dataset['type']=='Movie']['country'].value_counts().sort_index()
-        st.subheader('Países que veem filmes dessa classificação')
-        st.text('Not Given = Desconhecido')
+        
+        if show_movie_rating:
+            st.subheader('Países que veem filmes dessa classificação')
+            st.text('Not Given = Desconhecido')
 
+        if show_movie_rating_date:
+            st.subheader('Quantidade de Filmes por Gênero')
+            maks_movie_rating_geral = dataset['rating'][dataset['type']=='Movie'].value_counts().sort_index()
+        
         if graph_bar_movie_5:
-            st.bar_chart(mask_select_class,color='#f542aa',height=500)
+            if show_movie_rating:
+                st.bar_chart(mask_select_class,color='#f542aa',height=500)
+            if show_movie_rating_date:
+                st.bar_chart(maks_movie_rating_geral,color='#f542aa',height=500)
 
         if graph_line_movie_5:
-            st.line_chart(mask_select_class,color='#f542aa',height=500)
+            if show_movie_rating:
+                st.bar_chart(mask_select_class,color='#f542aa',height=500)
+            if show_movie_rating_date:
+                st.line_chart(maks_movie_rating_geral,color='#f542aa',height=500)
  
 with abas[2]:
     st.subheader('Selecione como ver os dados')
@@ -435,18 +450,33 @@ with abas[2]:
         st.subheader('Selecione a classificação')
         mask_class = dataset["rating"][dataset['type']=='TV Show'].value_counts().sort_index()
         select_class = st.selectbox('Classificações',options=mask_class.index)
+        show_tv_rating = st.checkbox('Mostrar dados da classificação')
+        show_tv_rating_date = st.checkbox('Mostrar quantidade de Programa por cada categoria')
         #tipo de gráfico
         st.subheader('Selecione o tipo de gráfico')
         graph_bar_tv_5 = st.checkbox('Gráfico de Barras')
         graph_line_tv_5 = st.checkbox('Gráfico de Linhas')
         mask_select_class = dataset[dataset['rating']==select_class][dataset['type']=='TV Show']['country'].value_counts().sort_index()
-        st.subheader('Países que veem filmes dessa classificação')
-        st.text('Not Guiven = Desconhecido')
+        
+        if show_tv_rating:
+            st.subheader('Países que veem programas dessa classificação')
+            st.text('Not Given = Desconhecido')
+
+        if show_tv_rating_date:
+            st.subheader('Quantidade de Programa por Gênero')
+            maks_tv_rating_geral = dataset['rating'][dataset['type']=='TV Show'].value_counts().sort_index()
         
         if graph_bar_tv_5:
-            st.bar_chart(mask_select_class,color='#f542aa',height=500)
+            if show_tv_rating:
+                st.bar_chart(mask_select_class,color='#f542aa',height=500)
+            if show_tv_rating_date:
+                st.bar_chart(maks_tv_rating_geral,color='#f542aa',height=500)
+
         if graph_line_tv_5:
-            st.line_chart(mask_select_class,color='#f542aa',height=500)
+            if show_tv_rating:
+                st.bar_chart(mask_select_class,color='#f542aa',height=500)
+            if show_tv_rating_date:
+                st.line_chart(maks_tv_rating_geral,color='#f542aa',height=500)
 
 with abas[3]:
     st.subheader('Selecione como ver os dados')
@@ -566,24 +596,33 @@ with abas[3]:
         country_counts = st.selectbox('Países',options=mask_country.index)
         mask_movie_country = dataset[dataset['country']==country_counts]
         st.dataframe(mask_movie_country)
-        graph_movie_country = st.checkbox('Mostrar quantidade de filmes por cada país')
+        graph_movie_tv_country = st.checkbox('Mostrar quantidade de filmes e programas por cada país')
+        graph_movie_tv_qtd = st.checkbox('Mostrar quantidade filmes e programas lançados')
         #tipo de gráfico
         st.subheader('Selecione o tipo de gráfico')
         graph_bar_tvmovie_3 = st.checkbox('Gráfico de Barras')
         graph_line_tvmovie_3 = st.checkbox('Gráfico de Linhas')
 
-        if graph_movie_country:
+        if graph_movie_tv_country:
             st.subheader('Selecione a quantidade de Páises')
             qtd_country = st.slider(' ',1,86)
-            mask_country = dataset['country'][dataset['type']=='Movie'].value_counts().sort_index().head(qtd_country)
+            mask_country = dataset['country'].value_counts().sort_index().head(qtd_country)
         
+        if graph_movie_tv_qtd:
+            st.subheader('Quantidade de Lançamentos de Programas e Filmes')
+            maks_qtd_movie_tv = dataset['type'].value_counts()
+
         if graph_bar_tvmovie_3:
-            if graph_movie_country:
+            if graph_movie_tv_country:
                 st.bar_chart(mask_country,color='#eb4034',width=900,height=500)
+            if graph_movie_tv_qtd:
+                st.bar_chart(maks_qtd_movie_tv,color='#f59b42',width=900,height=500)
 
         if graph_line_tvmovie_3:
-            if graph_movie_country:
+            if graph_movie_tv_country:
                 st.line_chart(mask_country,color='#eb4034',width=900,height=500)
+            if graph_movie_tv_qtd:
+                st.line_chart(maks_qtd_movie_tv,color='#f59b42',width=900,height=500)
 
     if op4_movie_tv:
         st.subheader('Selecione uma das opções')
@@ -639,15 +678,30 @@ with abas[3]:
         st.subheader('Selecione a classificação')
         mask_class = dataset["rating"].value_counts().sort_index()
         select_class = st.selectbox('Classificações',options=mask_class.index)
+        show_tv_movie_rating = st.checkbox('Mostrar dados da classificação')
+        show_tv_movie_rating_date = st.checkbox('Mostrar quantidade de Programa e Filmes por cada categoria')
         #tipo de gráfico
         st.subheader('Selecione o tipo de gráfico')
         graph_bar_tv_5 = st.checkbox('Gráfico de Barras')
         graph_line_tv_5 = st.checkbox('Gráfico de Linhas')
         mask_select_class = dataset[dataset['rating']==select_class]['country'].value_counts().sort_index()
-        st.subheader('Países que veem filmes dessa classificação')
-        st.text('Not Guiven = Desconhecido')
+
+        if show_tv_movie_rating:
+            st.subheader('Países que veem filmes dessa classificação')
+            st.text('Not Guiven = Desconhecido')
+        
+        if show_tv_movie_rating_date:
+            st.subheader('Quantidade de Programa e Filmes por Gênero')
+            maks_tv_movie_rating_geral = dataset['rating'].value_counts().sort_index()
         
         if graph_bar_tv_5:
-            st.bar_chart(mask_select_class,color='#f542aa',height=500)
+            if show_tv_movie_rating:
+                st.bar_chart(mask_select_class,color='#f542aa',height=500)
+            if show_tv_movie_rating_date:
+                st.bar_chart(maks_tv_movie_rating_geral,color='#f542aa',height=500)
+
         if graph_line_tv_5:
-            st.line_chart(mask_select_class,color='#f542aa',height=500)
+            if show_tv_movie_rating:
+                st.line_chart(mask_select_class,color='#f542aa',height=500)
+            if show_tv_movie_rating_date:
+                st.line_chart(maks_tv_movie_rating_geral,color='#f542aa',height=500)
