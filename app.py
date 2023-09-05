@@ -24,7 +24,7 @@ dataset['release_year'] = dataset['release_year'].dt.year
 #opções do dashboard
 st.title('Projeto SAD')
 
-titulos_abas = ['Mostrar Dataset', 'Informações sobre os Filmes', 'Informações sobre os Programas de Tv', 'Informações gerais sobre Programas e Filmes']
+titulos_abas = ['Dataset', 'Informações sobre os Filmes', 'Informações sobre os Programas de Tv', 'Informações gerais sobre Programas e Filmes']
 abas = st.tabs(titulos_abas)
 
 with abas[0]:
@@ -59,10 +59,10 @@ with abas[1]:
         st.dataframe(mask_movies)
         show_duration_movie = st.checkbox('Mostrar informações sobre o tempo de duração dos filmes')
         show_director_movie = st.checkbox('Quantidade de Filmes por cada diretor')
-        show_top_genre_movie = st.checkbox('Mostrar Gêneros mais assistidos (Filmes)')
+        #tipo de gráfico
         st.subheader('Selecione o tipo de gráfico')
-        graph_bar_movie = st.checkbox('Gráfico de Barras')
-        graph_line_movie = st.checkbox('Gráfico de Linhas')
+        graph_bar_movie = st.checkbox('Gráfico de Barras gerais')
+        graph_line_movie = st.checkbox('Gráfico de Linhas gerais')
 
         if show_duration_movie:
             st.subheader('Tempo de duração dos Filmes')
@@ -80,11 +80,6 @@ with abas[1]:
             st.subheader(f'Quantidade de filmes por cada diretor no ano: {movie_counts}')
             mask_director = dataset[dataset['type'] == 'Movie'][dataset['release_year']==movie_counts]['director'].value_counts().sort_index()
 
-        if show_top_genre_movie:
-            mask_genre_geral_movie = dataset['listed_in'][dataset['type'] == 'Movie'].value_counts().sort_values(ascending=False)
-            st.subheader('Gêneros de Programas mais assistidos')
-            qtd_geral_genre_tv = st.slider('Selecione quantos gêneros de Filmes deseja ver',1,278)
-
         if graph_bar_movie:
             if show_duration_movie:
                 st.bar_chart(mask_movie_duration,height=500,color='#1129ad')
@@ -92,8 +87,6 @@ with abas[1]:
                 if geral_director:
                     st.bar_chart(mask_director_geral,color='#ad4d11',height=400,width=700)
                 st.bar_chart(mask_director,color='#ad4d11',height=400)
-            if show_top_genre_movie:
-                st.bar_chart(mask_genre_geral_movie.head(qtd_geral_genre_tv),height=400,color='#03fc49')
         
         if graph_line_movie:
             if show_duration_movie:
@@ -102,8 +95,6 @@ with abas[1]:
                 if geral_director:
                     st.line_chart(mask_director_geral,color='#ad4d11',height=400,width=700)
                 st.line_chart(mask_director,color='#ad4d11',height=400)
-            if show_top_genre_movie:
-                st.line_chart(mask_genre_geral_movie.head(qtd_geral_genre_tv),height=400,color='#03fc49')
 
     if op3_movie:
         st.subheader('Selecionar quantidade de filmes')
@@ -150,8 +141,7 @@ with abas[1]:
             st.bar_chart(count_movies,color='#2b9efc')
         
         if graph_line_movie_2:
-            st.line_chart(count_movies,color='#2b9efc')
-        
+            st.line_chart(count_movies,color='#2b9efc')       
     
     if op4_movie:
         st.subheader('Selecione um País')
@@ -161,8 +151,8 @@ with abas[1]:
         st.dataframe(mask_movie_country)
         graph_movie_country = st.checkbox('Mostrar quantidade de filmes por cada país')
         st.subheader('Selecione o tipo de gráfico')
-        graph_bar_movie_3 = st.checkbox('Gráfico de Barras')
-        graph_line_movie_3 = st.checkbox('Gráfico de Linhas')
+        graph_bar_movie_3 = st.checkbox('Barras')
+        graph_line_movie_3 = st.checkbox('Linhas')
 
         if graph_movie_country:
             st.subheader('Selecione a quantidade de Páises')
@@ -185,8 +175,8 @@ with abas[1]:
         graph_genre_country = st.checkbox('Mostrar gêneros por cada país')
         graph_country_genre = st.checkbox('Ver informações sobre cada gênero')
         st.subheader('Selecione o tipo de gráfico')
-        graph_bar_movie_4 = st.checkbox('Gráfico de Barras')
-        graph_line_movie_4 = st.checkbox('Gráfico de Linhas')
+        graph_bar_movie_4 = st.checkbox('Barras     ')
+        graph_line_movie_4 = st.checkbox('Linhas    ')
 
         if graph_qtd_category:
             st.subheader('Selecione e quantidade de gêneros')
@@ -234,8 +224,8 @@ with abas[1]:
         show_movie_rating_date = st.checkbox('Mostrar quantidade de filmes por cada categoria')
         #tipo de plotagem
         st.subheader('Selecione o tipo de gráfico')
-        graph_bar_movie_5 = st.checkbox('Gráfico de Barras')
-        graph_line_movie_5 = st.checkbox('Gráfico de Linhas')
+        graph_bar_movie_5 = st.checkbox('Gráfico de Barras      ')
+        graph_line_movie_5 = st.checkbox('Gráfico de Linhas     ')
         mask_select_class = dataset[dataset['rating']==select_class][dataset['type']=='Movie']['country'].value_counts().sort_index()
         
         if show_movie_rating:
@@ -254,7 +244,7 @@ with abas[1]:
 
         if graph_line_movie_5:
             if show_movie_rating:
-                st.bar_chart(mask_select_class,color='#f542aa',height=500)
+                st.line_chart(mask_select_class,color='#f542aa',height=500)
             if show_movie_rating_date:
                 st.line_chart(maks_movie_rating_geral,color='#f542aa',height=500)
  
@@ -286,11 +276,10 @@ with abas[2]:
         st.dataframe(mask_tvshow)
         show_duration_tvshow = st.checkbox('Mostrar informações sobre o tempo de duração dos Programas')
         show_director_tvshow = st.checkbox('Quantidade de Programas por cada diretor')
-        show_top_genre_tv = st.checkbox('Mostrar Gêneros mais assistidos (Programas de TV)')
         #tipo de Gráfico para plotagem
         st.subheader('Selecione o tipo de gráfico')
-        graph_bar_tv = st.checkbox('Gráfico de Barras')
-        graph_line_tv = st.checkbox('Gráfico de Linhas')
+        graph_bar_tv = st.checkbox('Gráfico de Barras         ')
+        graph_line_tv = st.checkbox('Gráfico de Linhas          ')
 
         if show_duration_tvshow:
             st.subheader('Tempo de duração dos Programas')
@@ -299,7 +288,7 @@ with abas[2]:
         if show_director_tvshow:
             st.subheader('Qunatidade de Programas por cada Diretor')
             st.text('Not Given = Desconhecido')
-            geral_director = st.checkbox('Ver estástica Geral dos diretores')
+            geral_director = st.checkbox('Ver quantidade Geral dos diretores')
 
             if geral_director:
                 st.subheader('Quantidade de Programas por cada diretor')
@@ -307,11 +296,6 @@ with abas[2]:
                 mask_director_geral = dataset[dataset['type'] == 'TV Show']['director'].value_counts().sort_values(ascending=False).head(qtd_director)
             
             mask_director = dataset[dataset['type'] == 'TV Show'][dataset['release_year']==select_tvyear]['director'].value_counts().sort_index()
-        
-        if show_top_genre_tv:
-            mask_genre_geral_tv = dataset['listed_in'][dataset['type']=='TV Show'].value_counts()
-            st.subheader('Gêneros de Filmes mais assistidos')
-            qtd_geral_genre_tv = st.slider('Selecione quantos gêneros de programas deseja ver',1,235)
 
         if graph_bar_tv:
             if show_duration_tvshow:
@@ -320,8 +304,6 @@ with abas[2]:
                 if geral_director:
                     st.bar_chart(mask_director_geral,color='#ad4d11',height=400,width=700)
                 st.bar_chart(mask_director,color='#ad4d11',height=400)
-            if show_top_genre_tv:
-                st.bar_chart(mask_genre_geral_tv.head(qtd_geral_genre_tv),height=400,color='#6c0be3')
         
         if graph_line_tv:
             if show_duration_tvshow:
@@ -330,8 +312,6 @@ with abas[2]:
                 if geral_director:
                     st.line_chart(mask_director_geral,color='#ad4d11',height=400,width=700)
                 st.line_chart(mask_director,color='#ad4d11',height=400)
-            if show_top_genre_tv:
-                st.line_chart(mask_genre_geral_tv.head(qtd_geral_genre_tv),height=400,color='#6c0be3')
 
     if op3_tvshow:
         st.subheader('Selecionar quantidade de Programas')
@@ -343,8 +323,8 @@ with abas[2]:
         tv_4 = st.checkbox('Programas dos 2016 - 2021')
         #tipo de Gráfico para plotagem
         st.subheader('Selecione o tipo de gráfico')
-        graph_bar_tv_2 = st.checkbox('Gráfico de Barras')
-        graph_line_tv_2 = st.checkbox('Gráfico de Linhas')
+        graph_bar_tv_2 = st.checkbox('Gráfico de Barras             ')
+        graph_line_tv_2 = st.checkbox('Gráfico de Linhas            ')
 
         
         if qtd_tvshow:
@@ -381,8 +361,8 @@ with abas[2]:
         
         #tipo de gráfico
         st.subheader('Selecione o tipo de gráfico')
-        graph_bar_tv_3 = st.checkbox('Gráfico de Barras')
-        graph_line_tv_3 = st.checkbox('Gráfico de Linhas')
+        graph_bar_tv_3 = st.checkbox('Gráfico de Barras                 ')
+        graph_line_tv_3 = st.checkbox('Gráfico de Linhas                ')
 
         if graph_tvshow_country:
             st.subheader('Selecione a quantidade de Páises')
@@ -400,13 +380,13 @@ with abas[2]:
     if op5_tvshow:
         st.subheader('Selecione uma das opções')
         mask_category = dataset['listed_in'][dataset['type']=='TV Show'].value_counts()
-        graph_qtd_category = st.checkbox('Mostrar gráfico dos gêneros')
-        table_qtd_category = st.checkbox('Mostrar tabela dos gêneros')
-        graph_genre_country = st.checkbox('Mostrar gêneros por cada país')
-        graph_country_genre = st.checkbox('Ver informações sobre cada gênero')
+        graph_qtd_category = st.checkbox('Mostrar gráfico dos gêneros dos programas e filmes')
+        table_qtd_category = st.checkbox('Mostrar tabela dos gêneros dos programas e filmes')
+        graph_genre_country = st.checkbox('Mostrar gêneros assistidos por cada país')
+        graph_country_genre = st.checkbox('Páises que assistem os gêneros escolhidos')
         st.subheader('Selecione o tipo de gráfico')
-        graph_bar_tv_4 = st.checkbox('Gráfico de Barras')
-        graph_line_tv_4 = st.checkbox('Gráfico de Linhas')
+        graph_bar_tv_4 = st.checkbox('Gráfico de Barras                ')
+        graph_line_tv_4 = st.checkbox('Gráfico de Linhas                      ')
 
         if graph_qtd_category:
             st.subheader('Selecione e quantidade de gêneros')
@@ -450,12 +430,12 @@ with abas[2]:
         st.subheader('Selecione a classificação')
         mask_class = dataset["rating"][dataset['type']=='TV Show'].value_counts().sort_index()
         select_class = st.selectbox('Classificações',options=mask_class.index)
-        show_tv_rating = st.checkbox('Mostrar dados da classificação')
+        show_tv_rating = st.checkbox('Mostrar dados da classificação            ')
         show_tv_rating_date = st.checkbox('Mostrar quantidade de Programa por cada categoria')
         #tipo de gráfico
         st.subheader('Selecione o tipo de gráfico')
-        graph_bar_tv_5 = st.checkbox('Gráfico de Barras')
-        graph_line_tv_5 = st.checkbox('Gráfico de Linhas')
+        graph_bar_tv_5 = st.checkbox('Gráfico de Barras                     ')
+        graph_line_tv_5 = st.checkbox('Gráfico de Linhas                    ')
         mask_select_class = dataset[dataset['rating']==select_class][dataset['type']=='TV Show']['country'].value_counts().sort_index()
         
         if show_tv_rating:
@@ -499,8 +479,8 @@ with abas[3]:
         show_top_genre_movie_show = st.checkbox('Mostrar Gêneros mais assistidos')
         #tipo de gráfico
         st.subheader('Selecione o tipo de gráfico')
-        graph_bar_tvmovie = st.checkbox('Gráfico de Barras')
-        graph_line_tvmovie = st.checkbox('Gráfico de Linhas')
+        graph_bar_tvmovie = st.checkbox('Barras de Filmes e Programas')
+        graph_line_tvmovie = st.checkbox('Linhas de Filmes e Programas')
 
         if show_duration_movie_show:
             st.subheader('Tempo de duração dos Filmes e programas')
@@ -510,7 +490,7 @@ with abas[3]:
         if show_director_movie_show:
             st.subheader('Qunatidade de Filmes e programas por cada Diretor')
             st.text('Not Given = Desconhecido')
-            geral_director_show_movie = st.checkbox('Ver estástica Geral dos diretores')
+            geral_director_show_movie = st.checkbox('Ver dados Geral dos diretores')
 
             if geral_director_show_movie:
                 qtd_director_movie_show = st.slider('Quantidade de Diretores',1,4581)
@@ -555,8 +535,8 @@ with abas[3]:
         movies_shows_6 = st.checkbox('Filmes e Programas 2013 - 2021')
         #tipo de gráfico
         st.subheader('Selecione o tipo de gráfico')
-        graph_bar_tvmovie_2 = st.checkbox('Gráfico de Barras')
-        graph_line_tvmovie_2 = st.checkbox('Gráfico de Linhas')
+        graph_bar_tvmovie_2 = st.checkbox('Gráfico de Barras de filmes/programas')
+        graph_line_tvmovie_2 = st.checkbox('Gráfico de Linhas de filmes/programas')
         
         if qtd_movie_show:
             count_movies = dataset['release_year'].value_counts().sort_index().head(qtd_movie_show)
@@ -596,17 +576,18 @@ with abas[3]:
         country_counts = st.selectbox('Países',options=mask_country.index)
         mask_movie_country = dataset[dataset['country']==country_counts]
         st.dataframe(mask_movie_country)
+        graph_movie_tv_qtd = st.checkbox('Mostrar quantidade filmes e programas lançados no país escolhido acima')
         graph_movie_tv_country = st.checkbox('Mostrar quantidade de filmes e programas por cada país')
-        graph_movie_tv_qtd = st.checkbox('Mostrar quantidade filmes e programas lançados')
         #tipo de gráfico
         st.subheader('Selecione o tipo de gráfico')
-        graph_bar_tvmovie_3 = st.checkbox('Gráfico de Barras')
-        graph_line_tvmovie_3 = st.checkbox('Gráfico de Linhas')
+        graph_bar_tvmovie_3 = st.checkbox('Gráfico de Barras da quantidade')
+        graph_line_tvmovie_3 = st.checkbox('Gráfico de Linhas da quantidade')
 
         if graph_movie_tv_country:
             st.subheader('Selecione a quantidade de Páises')
             qtd_country = st.slider(' ',1,86)
-            mask_country = dataset['country'].value_counts().sort_index().head(qtd_country)
+            st.text('Not Guiven = Desconhecido')
+            mask_country = dataset['country'].value_counts().sort_values(ascending=False).head(qtd_country)
         
         if graph_movie_tv_qtd:
             st.subheader('Quantidade de Lançamentos de Programas e Filmes')
@@ -627,14 +608,14 @@ with abas[3]:
     if op4_movie_tv:
         st.subheader('Selecione uma das opções')
         mask_category = dataset['listed_in'].value_counts()
-        graph_qtd_category = st.checkbox('Mostrar gráfico dos gêneros')
-        table_qtd_category = st.checkbox('Mostrar tabela dos gêneros')
-        graph_genre_country = st.checkbox('Mostrar gêneros por cada país')
-        graph_country_genre = st.checkbox('Ver informações sobre cada gênero')
+        graph_qtd_category = st.checkbox('Mostrar gráfico dos gêneros dos programas/filmes')
+        table_qtd_category = st.checkbox('Mostrar tabela dos gêneros de programas/filmes')
+        graph_genre_country = st.checkbox('Mostrar gêneros dos programas/filmes por cada país')
+        graph_country_genre = st.checkbox('Ver informações sobre cada gênero da base de dados')
         #tipo de gráfico
         st.subheader('Selecione o tipo de gráfico')
-        graph_bar_tvmovie_4 = st.checkbox('Gráfico de Barras')
-        graph_line_tvmovie_4 = st.checkbox('Gráfico de Linhas')
+        graph_bar_tvmovie_4 = st.checkbox('Gráfico de Barras verticais')
+        graph_line_tvmovie_4 = st.checkbox('Gráfico de Linhas verticais')
 
         if graph_qtd_category:
             st.subheader('Selecione e quantidade de gêneros')
@@ -656,6 +637,7 @@ with abas[3]:
             mask_genre = dataset['listed_in'].value_counts().sort_index()
             select_genre = st.selectbox('Gêneros',options=mask_genre.index)
             st.subheader('Países que mais viram o gênero')
+            st.text('Not Guiven = Desconhecido')
             genre_counts = dataset[dataset['listed_in']==select_genre]['country'].value_counts().sort_index()
         
         if graph_bar_tvmovie_4:
@@ -677,14 +659,14 @@ with abas[3]:
     if op5_movie_tv:
         st.subheader('Selecione a classificação')
         mask_class = dataset["rating"].value_counts().sort_index()
-        select_class = st.selectbox('Classificações',options=mask_class.index)
+        select_class_movie_tv = st.selectbox('Classificações',options=mask_class.index)
         show_tv_movie_rating = st.checkbox('Mostrar dados da classificação')
         show_tv_movie_rating_date = st.checkbox('Mostrar quantidade de Programa e Filmes por cada categoria')
         #tipo de gráfico
         st.subheader('Selecione o tipo de gráfico')
         graph_bar_tv_5 = st.checkbox('Gráfico de Barras')
         graph_line_tv_5 = st.checkbox('Gráfico de Linhas')
-        mask_select_class = dataset[dataset['rating']==select_class]['country'].value_counts().sort_index()
+        mask_select_class = dataset[dataset['rating']==select_class_movie_tv]['country'].value_counts().sort_index()
 
         if show_tv_movie_rating:
             st.subheader('Países que veem filmes dessa classificação')
